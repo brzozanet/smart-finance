@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { login, register } from "../../redux/user/operations";
 
 //CSS
-import css from "./LoginForm.module.css"
+import css from "./LoginForm.module.css";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -18,7 +18,30 @@ const LoginForm = () => {
     password: "",
     star: "",
   });
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [apiError, setApiError] = useState("");
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.email) {
+      newErrors.email = "This is a required field";
+      newErrors.star = "*";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+      newErrors.star = "*";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "This is a required field";
+      newErrors.star = "*";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+      newErrors.star = "*";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -26,40 +49,40 @@ const LoginForm = () => {
       ...prevFormData,
       [name]: value,
     }));
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setFormSubmitted(true);
-
-    const newErrors = {};
-    if (!formData.email) {
-      newErrors.email = "This is a required field";
-      newErrors.star = "*";
-    }
-    if (!formData.password) {
-      newErrors.password = "This is a required field";
-      newErrors.star = "*  ";
-    }
-    setErrors(newErrors);
-
-    if (
-      Object.keys(newErrors).length === 0 ||
-      !formData.email ||
-      !formData.password
-    ) {
-      setFormData({ email: "", password: "" });
+    if (apiError) {
+      setApiError("");
     }
   };
 
   const onLogin = (e) => {
-    handleSubmit(e);
-    dispatch(login(formData));
+    e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
+    setApiError("");
+    dispatch(login(formData))
+      .unwrap()
+      .catch((message) => {
+        setApiError(message || "Login failed. Please try again.");
+      });
   };
 
   const onSignup = (e) => {
-    handleSubmit(e);
-    dispatch(register(formData));
+    e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
+    setApiError("");
+    dispatch(register(formData))
+      .unwrap()
+      .then(() => {
+        setApiError("Registration successful. You can now log in.");
+      })
+      .catch((message) => {
+        setApiError(message || "Registration failed. Please try again.");
+      });
   };
 
   return (
@@ -78,11 +101,7 @@ const LoginForm = () => {
         </p>
         <form className={css.Form}>
           <div className={css.InputContainer}>
-            <label className={css.Label}
-              required
-              // formSubmitted={formSubmitted}
-              value={formData.email}
-            >
+            <label className={css.Label} required value={formData.email}>
               {errors.email && (
                 <span className={css.InputValidation} style={{ margin: "0" }}>
                   {errors.star}
@@ -90,22 +109,21 @@ const LoginForm = () => {
               )}
               Email
             </label>
-            <input className={css.InputField}
+            <input
+              className={css.InputField}
               type="text"
               name="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="your@email.com"
             />
-            {errors.email && <span className={css.InputValidation}>{errors.email}</span>}
+            {errors.email && (
+              <span className={css.InputValidation}>{errors.email}</span>
+            )}
           </div>
 
           <div className={css.InputContainer}>
-            <label className={css.Label}
-              required
-              // formSubmitted={formSubmitted}
-              value={formData.password}
-            >
+            <label className={css.Label} required value={formData.password}>
               {errors.password && (
                 <span className={css.InputValidation} style={{ margin: "0" }}>
                   {errors.star}
@@ -114,7 +132,8 @@ const LoginForm = () => {
               Password
             </label>
 
-            <input className={css.InputField}
+            <input
+              className={css.InputField}
               type="password"
               name="password"
               value={formData.password}
@@ -130,10 +149,15 @@ const LoginForm = () => {
             <button className={css.ButtonLogin} type="submit" onClick={onLogin}>
               Log in
             </button>
-            <button className={css.ButtonSignup} type="submit" onClick={onSignup}>
+            <button
+              className={css.ButtonSignup}
+              type="submit"
+              onClick={onSignup}
+            >
               Registration
             </button>
           </div>
+          {apiError && <span className={css.ApiMessage}>{apiError}</span>}
         </form>
       </div>
     </div>

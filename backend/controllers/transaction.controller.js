@@ -3,9 +3,32 @@ const userService = require("../services/user.service");
 const { getMonthlyExpenseStats } = require("../helpers/monthsExpense");
 const { getMonthlyIncomeStats } = require("../helpers/monthsIncome");
 
+const normalizeDate = (inputDate) => {
+  if (
+    inputDate &&
+    typeof inputDate === "object" &&
+    inputDate.day &&
+    inputDate.month &&
+    inputDate.year
+  ) {
+    return {
+      day: String(inputDate.day).padStart(2, "0"),
+      month: String(inputDate.month).padStart(2, "0"),
+      year: String(inputDate.year),
+    };
+  }
+
+  const fallback = new Date(inputDate || Date.now());
+  return {
+    day: String(fallback.getDate()).padStart(2, "0"),
+    month: String(fallback.getMonth() + 1).padStart(2, "0"),
+    year: String(fallback.getFullYear()),
+  };
+};
+
 const addExpense = async (req, res, next) => {
   try {
-    const { description, amount, date } = req.body;
+    const { description, amount, date, categories } = req.body;
     const userId = req.user.id;
 
     const user = await userService.getUserById(userId);
@@ -16,19 +39,19 @@ const addExpense = async (req, res, next) => {
       });
     }
 
-    const { day, month, year } = date;
-    const categories = "Wydatek";
+    const { day, month, year } = normalizeDate(date);
+    const normalizedCategory = categories || "Other";
 
     const newTransaction = await transactionService.createTransaction({
       date: { day, month, year },
       description,
-      categories,
-      amount,
+      categories: normalizedCategory,
+      amount: Number(amount),
       income: false,
       owner: userId,
     });
 
-    user.balance -= amount;
+    user.balance -= Number(amount);
     await user.save();
 
     res.status(200).json({
@@ -42,7 +65,7 @@ const addExpense = async (req, res, next) => {
 
 const addIncome = async (req, res, next) => {
   try {
-    const { description, amount, date } = req.body;
+    const { description, amount, date, categories } = req.body;
     const userId = req.user.id;
 
     const user = await userService.getUserById(userId);
@@ -53,19 +76,19 @@ const addIncome = async (req, res, next) => {
       });
     }
 
-    const { day, month, year } = date;
-    const categories = "Wydatek 2";
+    const { day, month, year } = normalizeDate(date);
+    const normalizedCategory = categories || "Income";
 
     const newTransaction = await transactionService.createTransaction({
       date: { day, month, year },
       description,
-      categories,
-      amount,
+      categories: normalizedCategory,
+      amount: Number(amount),
       income: true,
       owner: userId,
     });
 
-    user.balance += amount;
+    user.balance += Number(amount);
     await user.save();
 
     res.status(200).json({
@@ -82,9 +105,8 @@ const deleteTransaction = async (req, res, next) => {
     const userId = req.user.id;
     const transactionId = req.params.transactionId;
 
-    const transaction = await transactionService.getTransactionById(
-      transactionId
-    );
+    const transaction =
+      await transactionService.getTransactionById(transactionId);
     if (!transaction || transaction.owner.toString() !== userId) {
       return res
         .status(404)
@@ -112,7 +134,7 @@ const getExpenseStats = async (req, res, next) => {
 
     const expenses = await transactionService.getExpensesByUserAndYear(
       userId,
-      currentYear
+      currentYear,
     );
     const monthStats = getMonthlyExpenseStats(expenses, currentYear);
 
@@ -129,7 +151,7 @@ const getIncomeStats = async (req, res, next) => {
 
     const incomes = await transactionService.getIncomesByUserAndYear(
       userId,
-      currentYear
+      currentYear,
     );
     const monthStats = getMonthlyIncomeStats(incomes, currentYear);
 

@@ -39,7 +39,9 @@ app.use((error, _, res, __) => {
 });
 
 const PORT = process.env.PORT || 8000;
-const connection = mongoose.connect(process.env.DATABASE_URL);
+const mongoUrl =
+  process.env.DATABASE_URL || "mongodb://127.0.0.1:27017/finance_planner";
+const connection = mongoose.connect(mongoUrl);
 
 connection
   .then(() => {

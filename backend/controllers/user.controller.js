@@ -130,8 +130,42 @@ const logout = async (req, res) => {
   }
 };
 
+const updateBalance = async (req, res, next) => {
+  try {
+    const { newBalance } = req.body;
+    const userId = req.user.id;
+
+    if (newBalance === undefined || Number.isNaN(Number(newBalance))) {
+      return res.status(400).json({
+        status: "error",
+        code: 400,
+        message: "newBalance must be a number",
+        data: "Bad request",
+      });
+    }
+
+    const user = await userService.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        code: 404,
+        message: "User not found",
+        data: "Not found",
+      });
+    }
+
+    user.balance = Number(newBalance);
+    await user.save();
+
+    return res.status(200).json({ newBalance: user.balance });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
+  updateBalance,
 };
