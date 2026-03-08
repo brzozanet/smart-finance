@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 //CSS
-import css from "../Expenses/Expenses.module.css"
+import css from "../Expenses/Expenses.module.css";
 
 // REDUX HOOKS:
 import useIncomes from "../../hooks/useIncomes";
@@ -19,7 +19,7 @@ import TableIncome from "../Table/TableIncome";
 import ExpensesIncomeSummary from "../ExpensesIncomeSummary/ExpensesIncomeSummary";
 
 const Income = () => {
-  const { incomes, incomesMonthStats } = useIncomes();
+  const { incomesMonthStats } = useIncomes();
   // console.log("Incomes: ", { incomes, incomesMonthStats });
 
   const dispatch = useDispatch();

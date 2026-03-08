@@ -6,7 +6,6 @@ import useAuth from "../../hooks/useAuth";
 import useExpenses from "../../hooks/useExpenses";
 import useReports from "../../hooks/useReports";
 import {
-  setNewExpense,
   deleteExpense,
   getExpenseStats,
 } from "../../redux/expenses/operations";
@@ -43,7 +42,7 @@ export default function DenseTable() {
   const handleDelete = (id) => {
     dispatch(deleteExpense(id))
       .then(() => {})
-      .catch((error) => {});
+      .catch(() => {});
   };
 
   const rows = new Array(9).fill(null);

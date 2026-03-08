@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import CreateDatePicker from "../DatePickerForm/DatePicker";
-
-import Select from "react-select";
 
 import styles from "./ExpensesIncomeForm.module.css";
 
@@ -26,7 +24,7 @@ const ExpensesIncomeForm = ({ callback, actionType, categories }) => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    if (!date || !description  || !amount) {
+    if (!date || !description || !amount) {
       alert("Please fill out all required fields.");
       return;
     }
@@ -38,25 +36,7 @@ const ExpensesIncomeForm = ({ callback, actionType, categories }) => {
   };
 
   const handleCategoryChange = (selectedOption) => {
-    setCategory(selectedOption ? selectedOption.value : "");
-  };
-
-  const customSelectStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      zIndex: 5,
-      height: "50px",
-      border: "none",
-      borderColor: state.isFocused ? "#000000" : provided.borderColor,
-      "&:hover": {
-        borderColor: "#000000",
-      },
-      boxShadow: state.isFocused ? "0 0 0 1px #000000" : provided.boxShadow,
-    }),
-    menu: (provided) => ({
-      ...provided,
-      zIndex: 10,
-    }),
+    setCategory(selectedOption?.value ?? selectedOption ?? "");
   };
 
   const clearFormFields = () => {

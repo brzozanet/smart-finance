@@ -83,7 +83,7 @@
 
 // export default CategoryList;
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import useReports from "../../hooks/useReports.js";
 import css from "./CategoryList.module.css";
 import iconMapper from "../../components/utils/iconMapper";
@@ -94,7 +94,7 @@ const CategoryList = ({ currentView }) => {
 
   const { incomesReport, expensesReport } = useReports();
 
-  const fetchReportsData = async () => {
+  const fetchReportsData = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -115,7 +115,7 @@ const CategoryList = ({ currentView }) => {
 
           const total = Object.values(expensesData[category] || {}).reduce(
             (acc, val) => acc + val,
-            0
+            0,
           );
 
           return {
@@ -153,11 +153,11 @@ const CategoryList = ({ currentView }) => {
       console.error(error);
       setLoading(false);
     }
-  };
+  }, [currentView, expensesReport, incomesReport]);
 
   useEffect(() => {
     fetchReportsData();
-  }, [currentView, incomesReport, expensesReport]);
+  }, [fetchReportsData]);
 
   return (
     <div className={css.CategoryContainer}>

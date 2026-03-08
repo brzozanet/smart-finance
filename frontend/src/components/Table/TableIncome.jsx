@@ -5,11 +5,7 @@ import { useDispatch } from "react-redux";
 import useAuth from "../../hooks/useAuth";
 import useIncomes from "../../hooks/useIncomes";
 import useReports from "../../hooks/useReports";
-import {
-  setNewIncome,
-  deleteIncome,
-  getIncomeStats,
-} from "../../redux/incomes/operations";
+import { deleteIncome, getIncomeStats } from "../../redux/incomes/operations";
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -48,8 +44,8 @@ export default function IncomeTable() {
 
   const handleDelete = (id) => {
     dispatch(deleteIncome(id))
-      .then(() => { })
-      .catch((error) => { });
+      .then(() => {})
+      .catch(() => {});
   };
 
   // const handleAdd = () => {
@@ -90,7 +86,7 @@ export default function IncomeTable() {
         ) : (
           dataRows.map((income, index) => (
             <tr className={css.tableContainer} key={income ? income.id : index}>
-              <td className={css.tableContainerItem} >
+              <td className={css.tableContainerItem}>
                 {income ? formatDate(income.date) : ""}
               </td>
               <td
@@ -120,7 +116,7 @@ export default function IncomeTable() {
                 {income ? (
                   <button
                     className={css.trashButton}
-                    onClick={handleDelete}
+                    onClick={() => handleDelete(income.id)}
                     style={{ cursor: "pointer" }}
                   >
                     <img

@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
-// REDUX HOOKS:
-import useReports from "../../hooks/useReports";
 
 // REDUX ACTIONS:
 import { getTransactionsData } from "../../redux/reports/operators";
@@ -16,7 +12,6 @@ import ReportsCategoriesNav from "../../components/ReportsCategoriesNav/ReportsC
 import CategoryList from "../../components/CategoryList/CategoryList";
 import BarChart from "../../components/Chart/BarChart";
 import ReturnMainpage from "../../components/ReturnMainPage/ReturnMainPage";
-
 
 const ReportsPage = () => {
   const [currentPeriod, setCurrentPeriod] = useState(() => {
@@ -40,13 +35,19 @@ const ReportsPage = () => {
       <div className="reports-header">
         <ReturnMainpage />
         <Balance />
-        <CurrentPeriod currentPeriod={currentPeriod} setCurrentPeriod={setCurrentPeriod} />
+        <CurrentPeriod
+          currentPeriod={currentPeriod}
+          setCurrentPeriod={setCurrentPeriod}
+        />
       </div>
       <div className="reports-content">
         <BalanceLabel />
         <div className="category-section">
           <div className="category-wrapper">
-            <ReportsCategoriesNav currentView={currentView} toggleView={toggleView} />
+            <ReportsCategoriesNav
+              currentView={currentView}
+              toggleView={toggleView}
+            />
             <CategoryList currentView={currentView} />
           </div>
         </div>
