@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: finance-planner-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20.19.0
+      - key: PORT
+        value: 8000
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

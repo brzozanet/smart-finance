@@ -12,9 +12,39 @@ const transactionRouter = require("./routes/transaction.routes");
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(morgan(formatsLogger));
-app.use(cors());
+
+// Allow local dev and explicitly configured frontend domains (e.g. Vercel).
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  ...(process.env.FRONTEND_URL || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Requests without origin (curl/postman/server-to-server) should pass.
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(passport.initialize());
+
+app.get("/health", (_, res) => {
+  res.status(200).json({
+    status: "ok",
+    message: "Finance Planner API is running",
+  });
+});
 
 app.use("/auth", usersRouter);
 app.use("/transaction", transactionRouter);
