@@ -88,15 +88,8 @@ const LoginForm = () => {
   return (
     <div className={css.LoginFormContainer}>
       <div className={css.LoginFormWrapper}>
-        <p className={css.LoginFirstParagraph}>
-          You can log in with your Google Account:
-        </p>
-        <div className={css.ButtonGoogle}>
-          <GoogleIcon />
-          Google
-        </div>
         <p className={css.LoginSecondParagraph}>
-          Or log in using an email and password,
+          You can log in using an email and password,
           <br /> after registering:
         </p>
         <form className={css.Form}>
@@ -152,6 +145,7 @@ const LoginForm = () => {
             <button
               className={css.ButtonSignup}
               type="submit"
+              disabled={true}
               onClick={onSignup}
             >
               Registration
