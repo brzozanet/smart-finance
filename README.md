@@ -202,7 +202,6 @@ Backend udostępnia następujące endpointy:
 
 - Aplikacja wymaga działającego backendu, aby poprawnie obsługiwać autoryzację i operacje finansowe.
 - W produkcji backend łączy się z MongoDB Atlas przez `DATABASE_URL`.
-- Jeśli backend jest usypiany na Render, pierwsze zapytanie może być wolniejsze.
 
 ### 🌐 Deployment
 
@@ -215,17 +214,18 @@ Projekt jest zdeployowany na:
 
 Backend (Railway):
 
-````env
+```env
 PORT=5000
 DATABASE_URL=mongodb+srv://<DB_USER>:<DB_PASS>@<CLUSTER_HOST>/<DB_NAME>?retryWrites=true&w=majority
 SECRET=<LONG_RANDOM_SECRET>
 FRONTEND_URL=https://smart-finance-kapusta.vercel.app
+```
 
 Frontend (Vercel):
 
 ```env
 REACT_APP_API_URL=https://smart-finance-backend.up.railway.app/
-````
+```
 
 ## 🎯 Status projektu
 
