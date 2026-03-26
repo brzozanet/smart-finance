@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const passport = require("passport");
-require("dotenv").config();
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
 const app = express();
+require("dotenv").config();
 
 const usersRouter = require("./routes/users.routes");
 const transactionRouter = require("./routes/transaction.routes");
