@@ -14,19 +14,6 @@ Aplikacja jest dostępna online pod adresem:
 
 **👉 [https://smart-finance-kapusta.vercel.app/](https://smart-finance-kapusta.vercel.app/)**
 
-**Platformy:**
-
-- **Frontend**: [Vercel](https://vercel.com) - hosting aplikacji React (CRA)
-- **Backend**: [Render](https://render.com) - hosting API Express
-- **Database**: MongoDB Atlas
-
-**⚠️ Ważne informacje:**
-
-- **Cold Start**: Backend na Render (darmowy plan) może potrzebować kilkunastu sekund po dłuższej bezczynności.
-- **CORS**: Backend akceptuje originy z `FRONTEND_URL` (wspiera tez wildcard `https://*.vercel.app`).
-
-### 🔐 Testowy użytkownik
-
 Do szybkiego sprawdzenia aplikacji na wersji online możesz użyć konta testowego:
 
 - **Login**: `user@testing.com`
@@ -34,10 +21,11 @@ Do szybkiego sprawdzenia aplikacji na wersji online możesz użyć konta testowe
 
 ### 📦 Architektura
 
-Aplikacja składa się z dwóch części:
+Aplikacja składa się z trzech części:
 
 - **Frontend**: React + Redux Toolkit + React Router, hostowany na Vercel
-- **Backend**: Express + Mongoose + JWT auth, hostowany na Render
+- **Backend**: Express + Mongoose + JWT auth, hostowany na Railway
+- **Database**: MongoDB Atlas
 
 ## 🛠 Użyte technologie
 
@@ -220,28 +208,27 @@ Backend udostępnia następujące endpointy:
 
 Projekt jest zdeployowany na:
 
-- **Frontend**: [https://smart-finance-kapusta.vercel.app/](https://smart-finance-kapusta.vercel.app/)
-- **Backend**: [https://smart-finance-backend-egfl.onrender.com](https://smart-finance-backend-egfl.onrender.com)
+- **Frontend**: [https://smart-finance-kapusta.vercel.app/](https://smart-finance-kapusta.vercel.app)
+- **Backend**: [https://smart-finance-backend.up.railway.app](https://smart-finance-backend.up.railway.app)
 
 #### Ustawienia produkcyjne ENV
 
-Backend (Render):
+Backend (Railway):
 
-```env
-PORT=8000
+````env
+PORT=5000
 DATABASE_URL=mongodb+srv://<DB_USER>:<DB_PASS>@<CLUSTER_HOST>/<DB_NAME>?retryWrites=true&w=majority
 SECRET=<LONG_RANDOM_SECRET>
-FRONTEND_URL=https://smart-finance-kapusta.vercel.app,https://*.vercel.app
-```
+FRONTEND_URL=https://smart-finance-kapusta.vercel.app
 
 Frontend (Vercel):
 
 ```env
-REACT_APP_API_URL=https://smart-finance-backend-egfl.onrender.com/
-```
+REACT_APP_API_URL=https://smart-finance-backend.up.railway.app/
+````
 
 ## 🎯 Status projektu
 
-✅ Projekt działa na produkcji (Vercel + Render).
+✅ Projekt działa na produkcji (Vercel + Railway).
 
 🛠 Trwa dalsze porządkowanie warstwy danych na froncie (pełna unifikacja API dla raportów i przychodów).
